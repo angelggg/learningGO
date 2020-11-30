@@ -9,10 +9,10 @@ import (
 
 type Author struct {
 	gorm.Model
-	Name string            `json:name gorm:"unique;not null"`
-	Genre string           `json:genre`
-	DateOfBirth datatypes.Date  `json:dob`
-	Books []Book           `gorm:"many2many:author_book;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
+	Name string                `json:name gorm:"unique;not null"`
+	Genre string               `json:genre`
+	DateOfBirth datatypes.Date `json:dob`
+	Books []Book               `gorm:"many2many:author_book;constraint:OnUpdate:CASCADE,OnDelete:SET NULL"`
 }
 
 

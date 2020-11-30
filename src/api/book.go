@@ -71,9 +71,9 @@ func GetOneBook(context *fiber.Ctx) error {
 func NewBook(context *fiber.Ctx) error {
 
 	var (
-		db       = dbase.Conn
-		cuBook CreateUpdateBook
-		authors    []models.Author
+		db      = dbase.Conn
+		cuBook  CreateUpdateBook
+		authors []models.Author
 	)
 
 	if err := context.BodyParser(&cuBook); err != nil {
@@ -111,7 +111,7 @@ func UpdateBook(context *fiber.Ctx) error {
 	id := context.Params("id")
 	var (
 		udBook CreateUpdateBook
-		book models.Book
+		book   models.Book
 	)
 
 	if err := db.First(&book, id).Error; err != nil {

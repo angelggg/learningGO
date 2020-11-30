@@ -9,8 +9,8 @@ import (
 
 type Book struct {
 	gorm.Model
-	Title string      `json:title`
-	Year string       `json:year`
+	Title string     `json:title`
+	Year string      `json:year`
 	Authors []Author `gorm:"many2many:author_book;"`
 }
 
@@ -22,7 +22,7 @@ type Response struct {
 
 func GetBookFromDB (id int) Book {
 	var (
-		db = dbase.Conn
+		db   = dbase.Conn
 		book Book
 	)
 	db.Find(&book, id)

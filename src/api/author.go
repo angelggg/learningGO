@@ -65,7 +65,12 @@ func GetOneAuthor(context *fiber.Ctx) error {
 	db := dbase.Conn
 	var author models.Author
 	db.Preload("Books").Find(&author, id)
-	context.Status(200).JSON(author)
+	if author.Name == "" {
+		context.Status(204)
+	} else {
+		context.Status(200)
+		context.JSON(author)
+	}
 	return nil
 }
 
@@ -78,7 +83,6 @@ func NewAuthor(context *fiber.Ctx) error {
 
 	if err := context.BodyParser(&cuAuthor); err != nil {
 		log.Fatal(err)
-		panic("Could not create")
 	}
 
 	author := getCreateUpdateToNormalAuthor(cuAuthor, models.Author{})
@@ -87,6 +91,7 @@ func NewAuthor(context *fiber.Ctx) error {
 	}
 	author.Books = books
 	db.Create(&author)
+	context.Status(201)
 	context.JSON(author)
 	return nil
 }
@@ -97,7 +102,7 @@ func UpdateAuthor(context *fiber.Ctx) error {
 	id := context.Params("id")
 	var (
 		udAuthor createUpdateAuthor
-		author models.Author
+		author   models.Author
 	)
 
 	if err := db.First(&author, id).Error; err != nil {
@@ -132,6 +137,7 @@ func UpdateAuthor(context *fiber.Ctx) error {
 			}
 	}
 	db.Save(&author)
+	context.Status(202)
 	context.JSON(author)
 	return nil
 }
@@ -146,13 +152,12 @@ func DeleteAuthor(context *fiber.Ctx) error {
 		context.SendString("Could not find object")
 		return err
 	}
-
+	db.Delete(&author)
 	context.Status(202)
-	context.SendString("Author deleted")
 	return nil
 }
 
-func getSimpleAuthorFields(author models.Author) SimpleAuthor{
+func getSimpleAuthorFields(author models.Author) SimpleAuthor {
 	var sa SimpleAuthor
 	sa.Genre = author.Genre
 	sa.Name = author.Name
